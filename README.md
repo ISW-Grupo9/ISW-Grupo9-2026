@@ -2,6 +2,7 @@
 Repositorio de la materia **Ingeniería y Calidad de Software** del **grupo 9**
 ## Integrantes:
 * Mateo Bringas - **85432**
+* Canaan Abigail Sara - **85860**
 
 ## Estructura del repositorio
 #COMPLETAR
