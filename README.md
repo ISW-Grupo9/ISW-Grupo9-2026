@@ -2,8 +2,8 @@
 Repositorio de la materia **Ingeniería y Calidad de Software** del **grupo 9**
 ## Integrantes:
 * Mateo Bringas - **85432**
+* Castro Cristian Leonel - **86340**
 * Canaan Abigail Sara - **85860**
-
 ## Estructura del repositorio
 #COMPLETAR
 
@@ -56,4 +56,4 @@ Repositorio de la materia **Ingeniería y Calidad de Software** del **grupo 9**
 - Técnicas y Herramientas para la realización de revisiones técnicas del software.
 
 
-## Linea Base --> #DEFINIR CUANDO
+## Linea Base --> #DEFINIR CUANDO...
