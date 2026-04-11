@@ -4,7 +4,14 @@ Repositorio de la materia **Ingeniería y Calidad de Software** del **grupo 9**
 * Mateo Bringas - **85432**
 * Castro Cristian Leonel - **86340**
 ## Estructura del repositorio
-#COMPLETAR
+
+La estructura del repositorio esta compuesta por 
+  - Bibliografia y papers: Donde se sube todo el material teorico.
+  - Guias practicas: Consignas y resolucion de las actividades practicas.
+  - Templates: Templates propuestas por la catedra.
+  - Teoricos: Material de las clases teoricas.
+  - Trabajos de investigacion: Consignas y resoluciones de los distintos trabajos de investigacion.
+  - Trabajos practicos: Resolucion de los trabajos practicos.
 
 ## Temas que se evalúan en el **primer parcial**
 
@@ -55,4 +62,4 @@ Repositorio de la materia **Ingeniería y Calidad de Software** del **grupo 9**
 - Técnicas y Herramientas para la realización de revisiones técnicas del software.
 
 
-## Linea Base --> #DEFINIR CUANDO...
+## Linea Base --> La Linea base se define el sabado de cada semana.
