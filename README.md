@@ -5,6 +5,7 @@ Repositorio de la materia **Ingeniería y Calidad de Software** del **grupo 9**
 * Castro Cristian Leonel - **86340**
 * Canaan Abigail Sara - **85860**
 * Filipetta Francisco - **400644**
+* Manuel Martinez - **400988**
 ## Estructura del repositorio
 
 La estructura del repositorio esta compuesta por 
