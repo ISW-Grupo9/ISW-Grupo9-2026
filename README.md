@@ -5,9 +5,11 @@ Repositorio de la materia **Ingeniería y Calidad de Software** del **grupo 9**
 * Canaan, Abigail Sara - **85860**
 * Castro, Cristian Leonel - **86340**
 * Cruz, Milagros Valentina - **90930**
-* Gusman, Lucas - **402469**
 * Filipetta, Francisco - **400644**
+* Gusman, Lucas - **402469**
 * Martinez, Manuel - **400988**
+* Matos, Salvador - **400638**
+
 
 (Respeten el orden alfabetico, primero va el apellido **coma** y el nombre :D)
 
