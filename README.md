@@ -6,7 +6,7 @@ Repositorio de la materia **Ingeniería y Calidad de Software** del **grupo 9**
 * Castro, Cristian Leonel - **86340**
 * Cruz, Milagros Valentina - **90930**
 * Filipetta, Francisco - **400644**
-* Gusman, Lucas - **402469**
+* Gusmán, Lucas - **402469**
 * Martinez, Manuel - **400988**
 * Matos, Salvador - **400638**
 * Rivera Cuffaro, Luigi - **91353**
