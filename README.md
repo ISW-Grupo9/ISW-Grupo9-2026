@@ -9,6 +9,7 @@ Repositorio de la materia **Ingeniería y Calidad de Software** del **grupo 9**
 * Gusman, Lucas - **402469**
 * Martinez, Manuel - **400988**
 * Matos, Salvador - **400638**
+* Rivera Cuffaro, Luigi - **91353**
 
 
 (Respeten el orden alfabetico, primero va el apellido **coma** y el nombre :D)
