@@ -13,8 +13,6 @@ Repositorio de la materia **Ingeniería y Calidad de Software** del **grupo 9**
 
 
 
-(Respeten el orden alfabetico, primero va el apellido **coma** y el nombre :D)
-
 ## Estructura del repositorio
 
 La estructura del repositorio esta compuesta por 
