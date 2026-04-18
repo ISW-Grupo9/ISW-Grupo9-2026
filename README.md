@@ -1,10 +1,19 @@
 # Ingeniería y Calidad de Software
 Repositorio de la materia **Ingeniería y Calidad de Software** del **grupo 9**
 ## Integrantes:
-* Mateo Bringas - **85432**
-* Castro Cristian Leonel - **86340**
-* Canaan Abigail Sara - **85860**
-* Filipetta Francisco - **400644**
+* Bringas, Mateo - **85432**
+* Canaan, Abigail Sara - **85860**
+* Castro, Cristian Leonel - **86340**
+* Cruz, Milagros Valentina - **90930**
+* Gusmán, Lucas - **402469**
+* Holtz, Santiago - **401208**
+* Martinez, Manuel - **400988**
+* Matos, Salvador - **400638**
+* Rivera Cuffaro, Luigi - **91353**
+
+
+
+
 ## Estructura del repositorio
 
 La estructura del repositorio esta compuesta por 
