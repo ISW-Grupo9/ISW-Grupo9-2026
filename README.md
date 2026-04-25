@@ -57,8 +57,9 @@ La estructura del repositorio esta compuesta por
 ### Unidad 2: Gestión Lean Agile de Productos de Software
 
 - Framework para escalar SCRUM / Nexus
-- Filosofía Lean - Método Kanban en el contexto del desarrollo de software
+- Filosofía Lean - Método Kanban en el contexto del desarrollo.
 - Métricas en los 3 enfoques (Tradicional / Lean / Agile)
+
   
 ### Unidad 4: Aseguramiento de Calidad de Proceso y de Producto
 
