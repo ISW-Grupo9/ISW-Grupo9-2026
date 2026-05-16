@@ -28,11 +28,43 @@ Los Releases son tags + notas de versión con interfaz visual:
 
 ## Actualización obligatoria de la documentación
 
-El archivo README.md expone la versión actual del proyecto, cada determinación de linea base debe actualizar la versión expuesta en el readme
+El archivo README.md expone la versión actual del proyecto. Cada determinación de línea base debe actualizar la versión expuesta en el README.
 
-pasos:
-1- ubicarse en main 
-2- crear la branch 
-3- hacer la modificacion del readme
-4- commit del cambio
-5- merge de la branch a main
+Pasos a seguir
+
+1. Ubicarse en main
+Asegúrate de estar en la rama principal y tener los últimos cambios del repositorio remoto:
+```bash
+git checkout main
+git pull origin main
+```
+
+2. Crear la branch
+Crea y muévete a una nueva rama específica para esta actualización (puedes cambiar docs/actualizar-version por el nombre de tu preferencia):
+```bash
+git checkout -b docs/actualizar-version
+```
+
+3. Hacer la modificación del README
+Abre el archivo README.md en tu editor de código, actualiza el número de versión y guarda los cambios. Luego, añade el archivo al área de preparación:
+```bash
+git add README.md
+```
+
+4. Commit del cambio
+Crea un commit con un mensaje descriptivo siguiendo las convenciones de tu equipo:
+```bash
+git commit -m "docs: actualizar versión del proyecto en README"
+```
+
+5. Merge de la branch a main
+Vuelve a la rama principal e integra los cambios de tu rama de documentación:
+```bash
+git checkout main
+git merge docs/actualizar-version
+```
+
+(Opcional) Subir los cambios al repositorio remoto:
+```bash
+git push origin main
+```
