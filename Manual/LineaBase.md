@@ -25,3 +25,14 @@ Los Releases son tags + notas de versión con interfaz visual:
 4. Elegir el tag (o crear uno nuevo como `v1.0-baseline`)
 5. Agregar título y descripción de la línea base
 6. Publicar el release
+
+## Actualización obligatoria de la documentación
+
+El archivo README.md expone la versión actual del proyecto, cada determinación de linea base debe actualizar la versión expuesta en el readme
+
+pasos:
+1- ubicarse en main 
+2- crear la branch 
+3- hacer la modificacion del readme
+4- commit del cambio
+5- merge de la branch a main
