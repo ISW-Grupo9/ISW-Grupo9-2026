@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mvn *)",
+      "Bash(mvn.cmd *)",
+      "Bash(ls)",
+      "Bash(ls *)",
+      "Bash(cd *)",
+      "PowerShell(Set-Location *)",
+      "PowerShell(mvn *)",
+      "PowerShell(npm *)",
+      "PowerShell(npx *)",
+      "Read",
+      "Write",
+      "Edit"
+    ]
+  }
+}
