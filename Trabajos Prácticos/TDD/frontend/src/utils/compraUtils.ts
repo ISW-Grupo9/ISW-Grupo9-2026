@@ -53,6 +53,11 @@ export function esVisitanteValido(v: Visitante): boolean {
   return v.edad >= 0
 }
 
+export function esNombreValido(nombre: string): boolean {
+  if (!nombre || nombre.trim() === '') return true
+  return /^[a-zA-ZÀ-ÿ\s\-']+$/.test(nombre)
+}
+
 // Feriados fijos confirmados por el PO: 25/12 y 01/01
 const FERIADOS_FIJOS_LOCAL: [number, number][] = [[12, 25], [1, 1]]
 

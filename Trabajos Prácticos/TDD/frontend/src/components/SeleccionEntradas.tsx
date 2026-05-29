@@ -6,9 +6,10 @@ interface Props {
   onCantidadChange: (n: number) => void
   onVisitanteChange: (index: number, campo: keyof Visitante, valor: string | number) => void
   error?: string
+  nombresError?: (string | undefined)[]
 }
 
-export function SeleccionEntradas({ cantidad, visitantes, onCantidadChange, onVisitanteChange, error }: Props) {
+export function SeleccionEntradas({ cantidad, visitantes, onCantidadChange, onVisitanteChange, error, nombresError }: Props) {
   return (
     <div className="space-y-5">
       <div>
@@ -54,8 +55,11 @@ export function SeleccionEntradas({ cantidad, visitantes, onCantidadChange, onVi
                   aria-label={`Nombre visitante ${i + 1}`}
                   onChange={e => onVisitanteChange(i, 'nombre', e.target.value)}
                   placeholder="Nombre"
-                  className="w-full px-3 py-2 bg-white border border-cream-300 rounded-lg text-sm text-forest-900 focus:outline-none focus:border-forest-800 transition-colors"
+                  className={`w-full px-3 py-2 bg-white border rounded-lg text-sm text-forest-900 focus:outline-none focus:border-forest-800 transition-colors ${nombresError?.[i] ? 'border-red-400' : 'border-cream-300'}`}
                 />
+                {nombresError?.[i] && (
+                  <span role="alert" className="text-[10px] text-red-500 px-1">{nombresError[i]}</span>
+                )}
               </div>
               <div className="shrink-0 flex flex-col gap-0.5">
                 <span className="text-[10px] text-forest-800/40 uppercase tracking-wider px-1">Edad</span>

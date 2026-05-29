@@ -117,6 +117,7 @@ export function CompraPage({ usuarioId, navigate = () => {}, redirect }: Props) 
               if (campo === 'tipoPase') form.setTipoPaseVisitante(i, valor as Visitante['tipoPase'])
             }}
             error={form.errors.cantidad ?? (form.visitantes.length === 0 ? cantidadError : undefined)}
+            nombresError={form.errors.nombresError}
           />
         </section>
 

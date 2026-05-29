@@ -35,5 +35,6 @@ export interface CompraFormErrors {
   fechaVisita?: string
   cantidad?: string
   visitantes?: string[]
+  nombresError?: (string | undefined)[]
   formaPago?: string
 }

@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from 'react'
 import type { Visitante, FormaPago, CompraFormErrors } from '../types'
-import { esFechaValida, esCantidadValida, calcularTotal, esVisitanteValido } from '../utils/compraUtils'
+import { esFechaValida, esCantidadValida, calcularTotal, esVisitanteValido, esNombreValido } from '../utils/compraUtils'
 
 const visitanteVacio = (): Visitante => ({ nombre: '', edad: 0, tipoPase: 'REGULAR' })
 
@@ -38,6 +38,11 @@ export function useCompraForm() {
 
   const setNombreVisitante = useCallback((index: number, nombre: string) => {
     setVisitantes(prev => prev.map((v, i) => i === index ? { ...v, nombre } : v))
+    setErrors(prev => {
+      const nombresError = [...(prev.nombresError ?? [])]
+      nombresError[index] = esNombreValido(nombre) ? undefined : 'El nombre solo puede contener letras'
+      return { ...prev, nombresError }
+    })
   }, [])
 
   const setTipoPaseVisitante = useCallback((index: number, tipoPase: Visitante['tipoPase']) => {
