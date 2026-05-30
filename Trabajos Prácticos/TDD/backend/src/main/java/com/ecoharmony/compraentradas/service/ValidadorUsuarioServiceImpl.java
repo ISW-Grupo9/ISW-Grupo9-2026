@@ -7,17 +7,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class ValidadorUsuarioServiceImpl implements ValidadorUsuarioService {
 
-    private final UsuarioRepository usuarioRepository;
+  private final UsuarioRepository usuarioRepository;
 
-    public ValidadorUsuarioServiceImpl(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
-    }
+  public ValidadorUsuarioServiceImpl(UsuarioRepository usuarioRepository) {
+    this.usuarioRepository = usuarioRepository;
+  }
 
-    @Override
-    public void validar(Long usuarioId) {
-        if (usuarioId == null || !usuarioRepository.existsById(usuarioId)) {
-            throw new UsuarioNoRegistradoException(
-                    "El usuario con id " + usuarioId + " no está registrado.");
-        }
+  @Override
+  public void validar(Long usuarioId) {
+    if (usuarioId == null || !usuarioRepository.existsById(usuarioId)) {
+      throw new UsuarioNoRegistradoException(
+          "El usuario con id " + usuarioId + " no está registrado.");
     }
+  }
 }

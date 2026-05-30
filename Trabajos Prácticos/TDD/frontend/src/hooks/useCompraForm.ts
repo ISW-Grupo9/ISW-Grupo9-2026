@@ -1,50 +1,68 @@
-import { useState, useCallback, useMemo } from 'react'
-import type { Visitante, FormaPago, CompraFormErrors } from '../types'
-import { esFechaValida, esCantidadValida, calcularTotal, esVisitanteValido } from '../utils/compraUtils'
+import { useState, useCallback, useMemo } from 'react';
+import type { Visitante, FormaPago, CompraFormErrors } from '../types';
+import {
+  esFechaValida,
+  esCantidadValida,
+  calcularTotal,
+  esVisitanteValido,
+  esNombreValido,
+} from '../utils/compraUtils';
 
-const visitanteVacio = (): Visitante => ({ nombre: '', edad: 0, tipoPase: 'REGULAR' })
+const visitanteVacio = (): Visitante => ({ nombre: '', edad: 0, tipoPase: 'REGULAR' });
 
 export function useCompraForm() {
-  const [fechaVisita, setFechaVisitaState] = useState(() => new Date().toISOString().split('T')[0])
-  const [visitantes, setVisitantes] = useState<Visitante[]>([])
-  const [formaPago, setFormaPago] = useState<FormaPago | null>(null)
-  const [errors, setErrors] = useState<CompraFormErrors>({})
+  const [fechaVisita, setFechaVisitaState] = useState(() => new Date().toISOString().split('T')[0]);
+  const [visitantes, setVisitantes] = useState<Visitante[]>([]);
+  const [formaPago, setFormaPago] = useState<FormaPago | null>(null);
+  const [errors, setErrors] = useState<CompraFormErrors>({});
 
   const setFechaVisita = useCallback((fecha: string) => {
-    setFechaVisitaState(fecha)
-    let fechaError: string | undefined
+    setFechaVisitaState(fecha);
+    let fechaError: string | undefined;
     if (fecha && !esFechaValida(fecha)) {
-      fechaError = 'La fecha no puede ser en el pasado'
+      fechaError = 'La fecha no puede ser en el pasado';
     }
-    setErrors(prev => ({ ...prev, fechaVisita: fechaError }))
-  }, [])
+    setErrors((prev) => ({ ...prev, fechaVisita: fechaError }));
+  }, []);
 
   const setCantidad = useCallback((cantidad: number) => {
-    setVisitantes(prev => {
+    setVisitantes((prev) => {
       if (cantidad > prev.length) {
-        return [...prev, ...Array(cantidad - prev.length).fill(null).map(visitanteVacio)]
+        return [
+          ...prev,
+          ...Array(cantidad - prev.length)
+            .fill(null)
+            .map(visitanteVacio),
+        ];
       }
-      return prev.slice(0, cantidad)
-    })
-    setErrors(prev => ({
+      return prev.slice(0, cantidad);
+    });
+    setErrors((prev) => ({
       ...prev,
       cantidad: !esCantidadValida(cantidad) ? `La cantidad debe ser entre 1 y 10` : undefined,
-    }))
-  }, [])
+    }));
+  }, []);
 
   const setEdadVisitante = useCallback((index: number, edad: number) => {
-    setVisitantes(prev => prev.map((v, i) => i === index ? { ...v, edad } : v))
-  }, [])
+    setVisitantes((prev) => prev.map((v, i) => (i === index ? { ...v, edad } : v)));
+  }, []);
 
   const setNombreVisitante = useCallback((index: number, nombre: string) => {
-    setVisitantes(prev => prev.map((v, i) => i === index ? { ...v, nombre } : v))
-  }, [])
+    setVisitantes((prev) => prev.map((v, i) => (i === index ? { ...v, nombre } : v)));
+    setErrors((prev) => {
+      const nombresError = [...(prev.nombresError ?? [])];
+      nombresError[index] = esNombreValido(nombre)
+        ? undefined
+        : 'El nombre solo puede contener letras';
+      return { ...prev, nombresError };
+    });
+  }, []);
 
   const setTipoPaseVisitante = useCallback((index: number, tipoPase: Visitante['tipoPase']) => {
-    setVisitantes(prev => prev.map((v, i) => i === index ? { ...v, tipoPase } : v))
-  }, [])
+    setVisitantes((prev) => prev.map((v, i) => (i === index ? { ...v, tipoPase } : v)));
+  }, []);
 
-  const total = useMemo(() => calcularTotal(visitantes), [visitantes])
+  const total = useMemo(() => calcularTotal(visitantes), [visitantes]);
 
   const isValid = useMemo(() => {
     return (
@@ -55,8 +73,8 @@ export function useCompraForm() {
       !!formaPago &&
       !errors.fechaVisita &&
       !errors.cantidad
-    )
-  }, [fechaVisita, visitantes, formaPago, errors])
+    );
+  }, [fechaVisita, visitantes, formaPago, errors]);
 
   return {
     fechaVisita,
@@ -71,5 +89,5 @@ export function useCompraForm() {
     setNombreVisitante,
     setEdadVisitante,
     setTipoPaseVisitante,
-  }
+  };
 }

@@ -10,80 +10,82 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import jakarta.mail.internet.MimeMessage;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.mail.MailException;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
-
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
-import java.util.List;
 import java.util.Locale;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.MailException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
 public class EmailServiceImpl implements EmailService {
 
-    private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static final NumberFormat FORMATO_PRECIO =
-            NumberFormat.getNumberInstance(new Locale("es", "AR"));
+  private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+  private static final NumberFormat FORMATO_PRECIO =
+      NumberFormat.getNumberInstance(new Locale("es", "AR"));
 
-    private final JavaMailSender mailSender;
-    private final UsuarioRepository usuarioRepository;
+  private final JavaMailSender mailSender;
+  private final UsuarioRepository usuarioRepository;
 
-    public EmailServiceImpl(JavaMailSender mailSender, UsuarioRepository usuarioRepository) {
-        this.mailSender = mailSender;
-        this.usuarioRepository = usuarioRepository;
+  public EmailServiceImpl(JavaMailSender mailSender, UsuarioRepository usuarioRepository) {
+    this.mailSender = mailSender;
+    this.usuarioRepository = usuarioRepository;
+  }
+
+  @Override
+  public void enviarConfirmacion(Compra compra) {
+    if (compra.getEstado() != EstadoCompra.PENDIENTE_BOLETERIA
+        && compra.getEstado() != EstadoCompra.CONFIRMADA) {
+      return;
     }
 
-    @Override
-    public void enviarConfirmacion(Compra compra) {
-        if (compra.getEstado() != EstadoCompra.PENDIENTE_BOLETERIA
-                && compra.getEstado() != EstadoCompra.CONFIRMADA) {
-            return;
-        }
+    String emailDestino =
+        usuarioRepository.findById(compra.getUsuarioId()).map(u -> u.getEmail()).orElse(null);
 
-        String emailDestino = usuarioRepository.findById(compra.getUsuarioId())
-                .map(u -> u.getEmail())
-                .orElse(null);
+    if (emailDestino == null) return;
 
-        if (emailDestino == null) return;
-
-        try {
-            MimeMessage mime = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mime, true, "UTF-8");
-            helper.setTo(emailDestino);
-            helper.setSubject("Confirmación de compra #" + compra.getId() + " — EcoHarmony Park");
-            helper.setText(construirHtml(compra), true);
-            mailSender.send(mime);
-            log.info("Mail enviado a {}", emailDestino);
-        } catch (MailException | jakarta.mail.MessagingException e) {
-            log.warn("No se pudo enviar el mail a {} (sin servidor SMTP): {}", emailDestino, e.getMessage());
-        }
+    try {
+      MimeMessage mime = mailSender.createMimeMessage();
+      MimeMessageHelper helper = new MimeMessageHelper(mime, true, "UTF-8");
+      helper.setTo(emailDestino);
+      helper.setSubject("Confirmación de compra #" + compra.getId() + " — EcoHarmony Park");
+      helper.setText(construirHtml(compra), true);
+      mailSender.send(mime);
+      log.info("Mail enviado a {}", emailDestino);
+    } catch (MailException | jakarta.mail.MessagingException e) {
+      log.warn(
+          "No se pudo enviar el mail a {} (sin servidor SMTP): {}", emailDestino, e.getMessage());
     }
+  }
 
-    private String construirHtml(Compra compra) {
-        String fecha = compra.getFechaVisita().format(FORMATO_FECHA);
-        String formaPago = compra.getFormaPago().name().equals("EFECTIVO") ? "Efectivo en boletería" : "Tarjeta (Mercado Pago)";
-        String qrBase64 = generarQrBase64(compra);
+  private String construirHtml(Compra compra) {
+    String fecha = compra.getFechaVisita().format(FORMATO_FECHA);
+    String formaPago =
+        compra.getFormaPago().name().equals("EFECTIVO")
+            ? "Efectivo en boletería"
+            : "Tarjeta (Mercado Pago)";
+    String qrBase64 = generarQrBase64(compra);
 
-        StringBuilder filas = new StringBuilder();
-        BigDecimal total = BigDecimal.ZERO;
-        int numero = 1;
+    StringBuilder filas = new StringBuilder();
+    BigDecimal total = BigDecimal.ZERO;
+    int numero = 1;
 
-        for (Visitante v : compra.getVisitantes()) {
-            BigDecimal subtotal = calcularPrecio(v);
-            total = total.add(subtotal);
+    for (Visitante v : compra.getVisitantes()) {
+      BigDecimal subtotal = calcularPrecio(v);
+      total = total.add(subtotal);
 
-            String nombreCelda = (v.getNombre() != null) ? v.getNombre() : "—";
-            String descuento = describir(v);
+      String nombreCelda = (v.getNombre() != null) ? v.getNombre() : "—";
+      String descuento = describir(v);
 
-            filas.append("""
+      filas.append(
+          """
                 <tr>
                   <td style="padding:10px 8px;border-bottom:1px solid #EDE8D5;color:#1B4332">%d</td>
                   <td style="padding:10px 8px;border-bottom:1px solid #EDE8D5">%s</td>
@@ -92,21 +94,29 @@ public class EmailServiceImpl implements EmailService {
                   <td style="padding:10px 8px;border-bottom:1px solid #EDE8D5;color:#888">%s</td>
                   <td style="padding:10px 8px;border-bottom:1px solid #EDE8D5;text-align:right;font-weight:600;color:#1B4332">$%s</td>
                 </tr>
-                """.formatted(numero++, nombreCelda, v.getEdad(),
-                    v.getTipoPase() == TipoPase.VIP ? "VIP" : "Regular",
-                    descuento,
-                    formatearPrecio(subtotal)));
-        }
+                """
+              .formatted(
+                  numero++,
+                  nombreCelda,
+                  v.getEdad(),
+                  v.getTipoPase() == TipoPase.VIP ? "VIP" : "Regular",
+                  descuento,
+                  formatearPrecio(subtotal)));
+    }
 
-        String imgQr = qrBase64.isEmpty() ? "" : """
+    String imgQr =
+        qrBase64.isEmpty()
+            ? ""
+            : """
             <div style="text-align:center;margin:28px 0 8px">
               <img src="data:image/png;base64,%s" width="160" height="160"
                    alt="QR de acceso" style="border:4px solid #D8F3DC;border-radius:8px;padding:4px"/>
               <p style="color:#888;font-size:11px;margin-top:6px">Presentá este código al ingresar al parque</p>
             </div>
-            """.formatted(qrBase64);
+            """
+                .formatted(qrBase64);
 
-        return """
+    return """
             <!DOCTYPE html>
             <html lang="es">
             <head><meta charset="UTF-8"></head>
@@ -199,51 +209,47 @@ public class EmailServiceImpl implements EmailService {
               </table>
             </body>
             </html>
-            """.formatted(
-                compra.getId(),
-                fecha,
-                formaPago,
-                filas.toString(),
-                formatearPrecio(total),
-                imgQr
-        );
-    }
+            """
+        .formatted(
+            compra.getId(), fecha, formaPago, filas.toString(), formatearPrecio(total), imgQr);
+  }
 
-    private String generarQrBase64(Compra compra) {
-        try {
-            String contenido = String.join("\n",
-                    "EcoHarmony Park",
-                    "Orden #" + compra.getId(),
-                    "Fecha: " + compra.getFechaVisita().format(FORMATO_FECHA),
-                    "Entradas: " + compra.getVisitantes().size()
-            );
-            QRCodeWriter writer = new QRCodeWriter();
-            BitMatrix matrix = writer.encode(contenido, BarcodeFormat.QR_CODE, 300, 300);
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            MatrixToImageWriter.writeToStream(matrix, "PNG", out);
-            return Base64.getEncoder().encodeToString(out.toByteArray());
-        } catch (Exception e) {
-            log.warn("No se pudo generar el QR: {}", e.getMessage());
-            return "";
-        }
+  private String generarQrBase64(Compra compra) {
+    try {
+      String contenido =
+          String.join(
+              "\n",
+              "EcoHarmony Park",
+              "Orden #" + compra.getId(),
+              "Fecha: " + compra.getFechaVisita().format(FORMATO_FECHA),
+              "Entradas: " + compra.getVisitantes().size());
+      QRCodeWriter writer = new QRCodeWriter();
+      BitMatrix matrix = writer.encode(contenido, BarcodeFormat.QR_CODE, 300, 300);
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      MatrixToImageWriter.writeToStream(matrix, "PNG", out);
+      return Base64.getEncoder().encodeToString(out.toByteArray());
+    } catch (Exception e) {
+      log.warn("No se pudo generar el QR: {}", e.getMessage());
+      return "";
     }
+  }
 
-    private BigDecimal calcularPrecio(Visitante v) {
-        BigDecimal base = v.getTipoPase().getPrecio();
-        if (v.getEdad() <= 3) return BigDecimal.ZERO;
-        if (v.getEdad() <= 15 || v.getEdad() >= 60)
-            return base.divide(new BigDecimal("2"), 0, RoundingMode.HALF_UP);
-        return base;
-    }
+  private BigDecimal calcularPrecio(Visitante v) {
+    BigDecimal base = v.getTipoPase().getPrecio();
+    if (v.getEdad() <= 3) return BigDecimal.ZERO;
+    if (v.getEdad() <= 15 || v.getEdad() >= 60)
+      return base.divide(new BigDecimal("2"), 0, RoundingMode.HALF_UP);
+    return base;
+  }
 
-    private String describir(Visitante v) {
-        if (v.getEdad() <= 3) return "Gratis (≤3 años)";
-        if (v.getEdad() <= 15) return "50% off (≤15 años)";
-        if (v.getEdad() >= 60) return "50% off (≥60 años)";
-        return "—";
-    }
+  private String describir(Visitante v) {
+    if (v.getEdad() <= 3) return "Gratis (≤3 años)";
+    if (v.getEdad() <= 15) return "50% off (≤15 años)";
+    if (v.getEdad() >= 60) return "50% off (≥60 años)";
+    return "—";
+  }
 
-    private String formatearPrecio(BigDecimal valor) {
-        return FORMATO_PRECIO.format(valor);
-    }
+  private String formatearPrecio(BigDecimal valor) {
+    return FORMATO_PRECIO.format(valor);
+  }
 }
