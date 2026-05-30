@@ -1,13 +1,13 @@
-import { useSearchParams } from 'react-router-dom'
-import { usePagoMP } from '../hooks/usePagoMP'
-import { formatearPrecio } from '../utils/compraUtils'
+import { useSearchParams } from 'react-router-dom';
+import { usePagoMP } from '../hooks/usePagoMP';
+import { formatearPrecio } from '../utils/compraUtils';
 
 export function MercadoPagoPage() {
-  const [params] = useSearchParams()
-  const compraId = params.get('compraId') ?? ''
-  const monto    = Number(params.get('monto') ?? 0)
+  const [params] = useSearchParams();
+  const compraId = params.get('compraId') ?? '';
+  const monto = Number(params.get('monto') ?? 0);
 
-  const { isLoading, isSuccess, error, confirmar } = usePagoMP()
+  const { isLoading, isSuccess, error, confirmar } = usePagoMP();
 
   if (isSuccess) {
     return (
@@ -17,7 +17,9 @@ export function MercadoPagoPage() {
           <h2 data-testid="pago-exitoso" className="text-2xl font-bold text-gray-800 mb-2">
             ¡Pago exitoso!
           </h2>
-          <p className="text-gray-500 mb-6">Tu compra fue confirmada. Revisá tu correo para ver el detalle.</p>
+          <p className="text-gray-500 mb-6">
+            Tu compra fue confirmada. Revisá tu correo para ver el detalle.
+          </p>
           <a
             href="/"
             className="inline-block bg-[#009ee3] text-white font-semibold py-3 px-8 rounded-full hover:bg-[#0084c6]"
@@ -26,13 +28,12 @@ export function MercadoPagoPage() {
           </a>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="min-h-screen bg-[#009ee3] flex items-center justify-center">
       <div className="bg-white rounded-2xl shadow-lg p-10 max-w-md w-full">
-
         {/* Header MP */}
         <div className="flex items-center gap-2 mb-8">
           <span className="text-2xl font-bold text-[#009ee3]">mercado</span>
@@ -60,7 +61,9 @@ export function MercadoPagoPage() {
         </div>
 
         {error && (
-          <p role="alert" className="text-red-600 text-sm mb-4 text-center">{error}</p>
+          <p role="alert" className="text-red-600 text-sm mb-4 text-center">
+            {error}
+          </p>
         )}
 
         {/* Botón Pagar */}
@@ -77,5 +80,5 @@ export function MercadoPagoPage() {
         </p>
       </div>
     </div>
-  )
+  );
 }

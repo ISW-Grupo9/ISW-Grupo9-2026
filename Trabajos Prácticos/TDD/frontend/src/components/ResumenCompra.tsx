@@ -1,21 +1,23 @@
-import type { Visitante } from '../types'
-import { formatearFecha, formatearPrecio, calcularTotal } from '../utils/compraUtils'
+import type { Visitante } from '../types';
+import { formatearFecha, formatearPrecio, calcularTotal } from '../utils/compraUtils';
 
 interface Props {
-  fechaVisita: string
-  visitantes: Visitante[]
+  fechaVisita: string;
+  visitantes: Visitante[];
 }
 
 export function ResumenCompra({ fechaVisita, visitantes }: Props) {
-  const total = calcularTotal(visitantes)
-  const regulares = visitantes.filter(v => v.tipoPase === 'REGULAR').length
-  const vips = visitantes.filter(v => v.tipoPase === 'VIP').length
+  const total = calcularTotal(visitantes);
+  const regulares = visitantes.filter((v) => v.tipoPase === 'REGULAR').length;
+  const vips = visitantes.filter((v) => v.tipoPase === 'VIP').length;
 
   return (
     <div className="space-y-3">
       <div className="flex justify-between items-center">
         <span className="text-white/50 text-xs uppercase tracking-widest">Entradas</span>
-        <span data-testid="cantidad" className="text-white text-sm font-medium">{visitantes.length} entradas</span>
+        <span data-testid="cantidad" className="text-white text-sm font-medium">
+          {visitantes.length} entradas
+        </span>
       </div>
       <div className="flex justify-between items-center">
         <span className="text-white/50 text-xs uppercase tracking-widest">Fecha</span>
@@ -36,5 +38,5 @@ export function ResumenCompra({ fechaVisita, visitantes }: Props) {
         </span>
       </div>
     </div>
-  )
+  );
 }
