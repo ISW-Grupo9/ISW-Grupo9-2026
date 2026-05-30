@@ -12,6 +12,7 @@ function App() {
         element={
           <CompraPage
             usuarioId="1"
+            usuarioEmail="demo@ecoharmony.com"
             navigate={navigate}
           />
         }
@@ -22,3 +23,4 @@ function App() {
 }
 
 export default App
+
