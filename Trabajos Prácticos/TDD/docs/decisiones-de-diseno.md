@@ -148,25 +148,6 @@ Se puede simular: mostrar el cuerpo del mail como **modal o página aparte**.
 
 ---
 
-## Cambios necesarios en el código
-
-### Prioritarios (rompen tests existentes o afectan lógica central)
-
-| # | Cambio | Archivos afectados | Ciclo |
-|---|--------|--------------------|-------|
-| 1 | Precios: REGULAR $10.000, VIP $20.000 | `TipoPase.java`, `compraUtils.ts` | Actualizar tests 7 y 14 |
-| 2 | Descuento por edad en `CalculadorPrecioService` | `CalculadorPrecioServiceImpl.java`, `compraUtils.ts` | Nuevo ciclo 7-bis |
-| 3 | Feriados fijos (25/12 y 01/01) en `ValidadorFechaService` | `ValidadorFechaServiceImpl.java` | Nuevo ciclo 4-bis |
-
-### Secundarios (mejoras de UI/UX)
-
-| # | Cambio | Descripción |
-|---|--------|-------------|
-| 4 | Modal de confirmación de mail | Mostrar cuerpo del mail con detalle, QR simulado |
-| 5 | Pantalla simulada de Mercado Pago | Componente `MercadoPagoSimulado.tsx` |
-
----
-
 ## Registro de cambios
 
 | Fecha | Cambio |
