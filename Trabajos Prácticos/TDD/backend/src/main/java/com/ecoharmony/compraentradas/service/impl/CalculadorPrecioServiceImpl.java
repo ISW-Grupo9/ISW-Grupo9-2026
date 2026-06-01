@@ -1,4 +1,6 @@
-package com.ecoharmony.compraentradas.service;
+package com.ecoharmony.compraentradas.service.impl;
+
+import com.ecoharmony.compraentradas.service.*;
 
 import com.ecoharmony.compraentradas.dto.VisitanteDto;
 import java.math.BigDecimal;
@@ -27,3 +29,4 @@ public class CalculadorPrecioServiceImpl implements CalculadorPrecioService {
     return precioBase;
   }
 }
+

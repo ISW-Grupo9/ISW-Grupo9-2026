@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 
 import com.ecoharmony.compraentradas.model.*;
 import com.ecoharmony.compraentradas.repository.UsuarioRepository;
+import com.ecoharmony.compraentradas.service.impl.EmailServiceImpl;
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
 import java.math.BigDecimal;

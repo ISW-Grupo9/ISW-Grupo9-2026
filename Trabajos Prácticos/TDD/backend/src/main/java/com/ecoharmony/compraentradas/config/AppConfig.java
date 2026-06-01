@@ -1,7 +1,7 @@
 package com.ecoharmony.compraentradas.config;
 
 import com.ecoharmony.compraentradas.service.ValidadorFechaService;
-import com.ecoharmony.compraentradas.service.ValidadorFechaServiceImpl;
+import com.ecoharmony.compraentradas.service.impl.ValidadorFechaServiceImpl;
 import java.time.Clock;
 import java.time.DayOfWeek;
 import java.util.Arrays;

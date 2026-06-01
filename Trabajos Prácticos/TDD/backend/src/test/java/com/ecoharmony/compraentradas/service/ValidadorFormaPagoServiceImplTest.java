@@ -3,6 +3,7 @@ package com.ecoharmony.compraentradas.service;
 import static org.assertj.core.api.Assertions.*;
 
 import com.ecoharmony.compraentradas.exception.FormaPagoRequeridaException;
+import com.ecoharmony.compraentradas.service.impl.ValidadorFormaPagoServiceImpl;
 import com.ecoharmony.compraentradas.model.FormaPago;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

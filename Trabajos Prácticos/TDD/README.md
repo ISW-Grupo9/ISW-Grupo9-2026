@@ -184,15 +184,25 @@ src/main/java/com/ecoharmony/compraentradas/
 │   └── CompraController          # POST /api/compras, GET /api/compras/{id}
 │                                 # POST /api/compras/{id}/confirmar
 ├── service/
-│   ├── CompraServiceImpl         # Orquestación del flujo de compra
-│   ├── ValidadorFechaServiceImpl # Valida fecha (pasada, lunes, feriados)
-│   ├── ValidadorCantidadServiceImpl
-│   ├── ValidadorVisitantesServiceImpl
-│   ├── ValidadorUsuarioServiceImpl  # Consulta UsuarioRepository (H2)
-│   ├── ValidadorFormaPagoServiceImpl
-│   ├── CalculadorPrecioServiceImpl  # Precio base + descuentos por edad
-│   ├── PagoServiceImpl           # Genera URL interna /pago/simulado
-│   └── EmailServiceImpl          # Envía mail (loguea si no hay SMTP)
+│   ├── CompraService             # Interfaces de cada servicio
+│   ├── ValidadorFechaService
+│   ├── ValidadorCantidadService
+│   ├── ValidadorVisitantesService
+│   ├── ValidadorUsuarioService
+│   ├── ValidadorFormaPagoService
+│   ├── CalculadorPrecioService
+│   ├── PagoService
+│   ├── EmailService
+│   └── impl/
+│       ├── CompraServiceImpl         # Orquestación del flujo de compra
+│       ├── ValidadorFechaServiceImpl # Valida fecha (pasada, lunes, feriados)
+│       ├── ValidadorCantidadServiceImpl
+│       ├── ValidadorVisitantesServiceImpl
+│       ├── ValidadorUsuarioServiceImpl  # Consulta UsuarioRepository (H2)
+│       ├── ValidadorFormaPagoServiceImpl
+│       ├── CalculadorPrecioServiceImpl  # Precio base + descuentos por edad
+│       ├── PagoServiceImpl           # Genera URL interna /pago/simulado
+│       └── EmailServiceImpl          # Envía mail (loguea si no hay SMTP)
 ├── model/
 │   ├── Compra, Visitante, Usuario
 │   ├── TipoPase (REGULAR $10.000 / VIP $20.000)

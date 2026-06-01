@@ -1,4 +1,6 @@
-package com.ecoharmony.compraentradas.service;
+package com.ecoharmony.compraentradas.service.impl;
+
+import com.ecoharmony.compraentradas.service.*;
 
 import com.ecoharmony.compraentradas.exception.FechaInvalidaException;
 import com.ecoharmony.compraentradas.exception.ParqueCerradoException;
@@ -29,12 +31,13 @@ public class ValidadorFechaServiceImpl implements ValidadorFechaService {
 
     if (diasCerrados.contains(fecha.getDayOfWeek())) {
       throw new ParqueCerradoException(
-          "El parque no abre el " + fecha.getDayOfWeek() + ". Seleccioná otro día.");
+          "El parque no abre el " + fecha.getDayOfWeek() + ". SeleccionÃ¡ otro dÃ­a.");
     }
 
     if (FERIADOS_FIJOS.contains(MonthDay.from(fecha))) {
       throw new ParqueCerradoException(
-          "El parque no abre el " + fecha + " (feriado). Seleccioná otro día.");
+          "El parque no abre el " + fecha + " (feriado). SeleccionÃ¡ otro dÃ­a.");
     }
   }
 }
+

@@ -3,6 +3,7 @@ package com.ecoharmony.compraentradas.service;
 import static org.assertj.core.api.Assertions.*;
 
 import com.ecoharmony.compraentradas.exception.CantidadInvalidaException;
+import com.ecoharmony.compraentradas.service.impl.ValidadorCantidadServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

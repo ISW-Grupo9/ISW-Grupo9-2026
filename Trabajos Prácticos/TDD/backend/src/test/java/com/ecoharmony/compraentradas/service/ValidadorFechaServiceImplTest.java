@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.ecoharmony.compraentradas.exception.FechaInvalidaException;
 import com.ecoharmony.compraentradas.exception.ParqueCerradoException;
+import com.ecoharmony.compraentradas.service.impl.ValidadorFechaServiceImpl;
 import java.time.*;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;

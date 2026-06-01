@@ -1,4 +1,6 @@
-package com.ecoharmony.compraentradas.service;
+package com.ecoharmony.compraentradas.service.impl;
+
+import com.ecoharmony.compraentradas.service.*;
 
 import com.ecoharmony.compraentradas.dto.CompraRequest;
 import com.ecoharmony.compraentradas.dto.CompraResponse;
@@ -107,3 +109,4 @@ public class CompraServiceImpl implements CompraService {
         urlPago);
   }
 }
+

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.ecoharmony.compraentradas.dto.VisitanteDto;
 import com.ecoharmony.compraentradas.model.TipoPase;
+import com.ecoharmony.compraentradas.service.impl.CalculadorPrecioServiceImpl;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

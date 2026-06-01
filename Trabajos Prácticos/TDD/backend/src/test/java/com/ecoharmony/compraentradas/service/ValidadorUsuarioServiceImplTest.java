@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.ecoharmony.compraentradas.exception.UsuarioNoRegistradoException;
 import com.ecoharmony.compraentradas.model.Usuario;
+import com.ecoharmony.compraentradas.service.impl.ValidadorUsuarioServiceImpl;
 import com.ecoharmony.compraentradas.repository.UsuarioRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

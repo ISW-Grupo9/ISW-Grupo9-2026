@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.ecoharmony.compraentradas.model.*;
 import com.ecoharmony.compraentradas.repository.CompraRepository;
+import com.ecoharmony.compraentradas.service.impl.PagoServiceImpl;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;

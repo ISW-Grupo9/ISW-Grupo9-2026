@@ -1,4 +1,6 @@
-package com.ecoharmony.compraentradas.service;
+package com.ecoharmony.compraentradas.service.impl;
+
+import com.ecoharmony.compraentradas.service.*;
 
 import com.ecoharmony.compraentradas.exception.UsuarioNoRegistradoException;
 import com.ecoharmony.compraentradas.repository.UsuarioRepository;
@@ -17,7 +19,8 @@ public class ValidadorUsuarioServiceImpl implements ValidadorUsuarioService {
   public void validar(Long usuarioId) {
     if (usuarioId == null || !usuarioRepository.existsById(usuarioId)) {
       throw new UsuarioNoRegistradoException(
-          "El usuario con id " + usuarioId + " no está registrado.");
+          "El usuario con id " + usuarioId + " no estÃ¡ registrado.");
     }
   }
 }
+

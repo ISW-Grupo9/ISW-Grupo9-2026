@@ -1,4 +1,6 @@
-package com.ecoharmony.compraentradas.service;
+package com.ecoharmony.compraentradas.service.impl;
+
+import com.ecoharmony.compraentradas.service.*;
 
 import com.ecoharmony.compraentradas.dto.VisitanteDto;
 import com.ecoharmony.compraentradas.exception.VisitantesInvalidosException;
@@ -11,7 +13,7 @@ public class ValidadorVisitantesServiceImpl implements ValidadorVisitantesServic
   @Override
   public void validar(int cantidadEntradas, List<VisitanteDto> visitantes) {
     if (visitantes == null || visitantes.isEmpty()) {
-      throw new VisitantesInvalidosException("La lista de visitantes no puede ser nula o vacía.");
+      throw new VisitantesInvalidosException("La lista de visitantes no puede ser nula o vacÃ­a.");
     }
     if (visitantes.size() != cantidadEntradas) {
       throw new VisitantesInvalidosException(
@@ -23,3 +25,4 @@ public class ValidadorVisitantesServiceImpl implements ValidadorVisitantesServic
     }
   }
 }
+

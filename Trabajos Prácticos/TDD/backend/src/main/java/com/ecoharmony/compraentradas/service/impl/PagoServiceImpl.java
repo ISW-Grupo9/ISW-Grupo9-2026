@@ -1,4 +1,6 @@
-package com.ecoharmony.compraentradas.service;
+package com.ecoharmony.compraentradas.service.impl;
+
+import com.ecoharmony.compraentradas.service.*;
 
 import com.ecoharmony.compraentradas.model.Compra;
 import com.ecoharmony.compraentradas.model.FormaPago;
@@ -17,3 +19,4 @@ public class PagoServiceImpl implements PagoService {
     return BASE_URL + "?compraId=" + compra.getId() + "&monto=" + compra.getMontoTotal();
   }
 }
+

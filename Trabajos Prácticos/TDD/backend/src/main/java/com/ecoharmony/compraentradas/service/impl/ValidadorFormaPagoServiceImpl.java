@@ -1,4 +1,6 @@
-package com.ecoharmony.compraentradas.service;
+package com.ecoharmony.compraentradas.service.impl;
+
+import com.ecoharmony.compraentradas.service.*;
 
 import com.ecoharmony.compraentradas.exception.FormaPagoRequeridaException;
 import com.ecoharmony.compraentradas.model.FormaPago;
@@ -14,3 +16,4 @@ public class ValidadorFormaPagoServiceImpl implements ValidadorFormaPagoService 
     }
   }
 }
+
