@@ -2,7 +2,7 @@ package com.ecoharmony.compraentradas.service.impl;
 
 import com.ecoharmony.compraentradas.exception.FormaPagoRequeridaException;
 import com.ecoharmony.compraentradas.model.FormaPago;
-import com.ecoharmony.compraentradas.service.*;
+import com.ecoharmony.compraentradas.service.ValidadorFormaPagoService;
 import org.springframework.stereotype.Service;
 
 @Service

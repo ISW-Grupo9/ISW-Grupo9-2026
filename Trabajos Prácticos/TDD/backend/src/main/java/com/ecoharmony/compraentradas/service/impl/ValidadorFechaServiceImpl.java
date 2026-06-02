@@ -2,8 +2,11 @@ package com.ecoharmony.compraentradas.service.impl;
 
 import com.ecoharmony.compraentradas.exception.FechaInvalidaException;
 import com.ecoharmony.compraentradas.exception.ParqueCerradoException;
-import com.ecoharmony.compraentradas.service.*;
-import java.time.*;
+import com.ecoharmony.compraentradas.service.ValidadorFechaService;
+import java.time.Clock;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.MonthDay;
 import java.util.Set;
 
 public class ValidadorFechaServiceImpl implements ValidadorFechaService {
@@ -30,12 +33,12 @@ public class ValidadorFechaServiceImpl implements ValidadorFechaService {
 
     if (diasCerrados.contains(fecha.getDayOfWeek())) {
       throw new ParqueCerradoException(
-          "El parque no abre el " + fecha.getDayOfWeek() + ". SeleccionÃ¡ otro dÃ­a.");
+          "El parque no abre el " + fecha.getDayOfWeek() + ". Seleccioná otro día.");
     }
 
     if (FERIADOS_FIJOS.contains(MonthDay.from(fecha))) {
       throw new ParqueCerradoException(
-          "El parque no abre el " + fecha + " (feriado). SeleccionÃ¡ otro dÃ­a.");
+          "El parque no abre el " + fecha + " (feriado). Seleccioná otro día.");
     }
   }
 }

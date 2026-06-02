@@ -21,12 +21,15 @@ function buildDisabled(diasCerrados: string[], feriadosFijos: string[]): Matcher
   const weekdays = diasCerrados.map((d) => DAY_MAP[d]).filter((n) => n !== undefined);
   if (weekdays.length) matchers.push({ dayOfWeek: weekdays });
 
-  const year = today.getFullYear();
-  for (const f of feriadosFijos) {
-    const [mm, dd] = f.split('-').map(Number);
-    for (let y = year; y <= year + 2; y++) {
-      matchers.push(new Date(y, mm - 1, dd));
-    }
+  if (feriadosFijos.length) {
+    matchers.push((date: Date) => {
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      return feriadosFijos.some((f) => {
+        const [mm, dd] = f.split('-').map(Number);
+        return month === mm && day === dd;
+      });
+    });
   }
 
   return matchers;

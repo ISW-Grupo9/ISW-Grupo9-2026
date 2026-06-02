@@ -6,6 +6,7 @@ import {
   calcularTotal,
   esVisitanteValido,
   esNombreValido,
+  MAX_EDAD,
 } from '../utils/compraUtils';
 
 const visitanteVacio = (): Visitante => ({ nombre: '', edad: null, tipoPase: 'REGULAR' });
@@ -47,14 +48,19 @@ export function useCompraForm() {
     setVisitantes((prev) => prev.map((v, i) => (i === index ? { ...v, edad } : v)));
     setErrors((prev) => {
       const edadesError = [...(prev.edadesError ?? [])];
-      edadesError[index] = edad === null ? 'Ingrese una edad válida (0-100)' : undefined;
+      edadesError[index] =
+      edad === null || edad < 0 || edad > MAX_EDAD
+        ? `Ingrese una edad válida (0-${MAX_EDAD})`
+        : undefined;
       return { ...prev, edadesError };
     });
   }, []);
 
   const validateEdades = useCallback((): boolean => {
     const edadesError = visitantes.map((v) =>
-      v.edad === null ? 'Ingrese una edad válida (0-100)' : undefined,
+      v.edad === null || v.edad < 0 || v.edad > MAX_EDAD
+        ? `Ingrese una edad válida (0-${MAX_EDAD})`
+        : undefined,
     );
     const hasError = edadesError.some(Boolean);
     if (hasError) setErrors((prev) => ({ ...prev, edadesError }));

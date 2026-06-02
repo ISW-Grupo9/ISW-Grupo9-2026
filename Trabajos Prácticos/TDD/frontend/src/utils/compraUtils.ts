@@ -4,6 +4,7 @@ import type { TipoPase, Visitante } from '../types';
 export const PRECIO_REGULAR = 10000;
 export const PRECIO_VIP = 20000;
 export const MAX_ENTRADAS = 10;
+export const MAX_EDAD = 120;
 
 // ASUNCION PO — parque cerrado los lunes (dayOfWeek: 1 = lunes en JS)
 export const DIAS_CERRADOS = [1];
@@ -51,7 +52,7 @@ export function esCantidadValida(cantidad: number): boolean {
 }
 
 export function esVisitanteValido(v: Visitante): boolean {
-  return v.edad !== null && v.edad >= 0;
+  return v.edad !== null && v.edad >= 0 && v.edad <= MAX_EDAD;
 }
 
 export function esNombreValido(nombre: string): boolean {

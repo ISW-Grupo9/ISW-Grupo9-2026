@@ -2,7 +2,7 @@ package com.ecoharmony.compraentradas.service.impl;
 
 import com.ecoharmony.compraentradas.model.Compra;
 import com.ecoharmony.compraentradas.model.FormaPago;
-import com.ecoharmony.compraentradas.service.*;
+import com.ecoharmony.compraentradas.service.PagoService;
 import org.springframework.stereotype.Service;
 
 @Service

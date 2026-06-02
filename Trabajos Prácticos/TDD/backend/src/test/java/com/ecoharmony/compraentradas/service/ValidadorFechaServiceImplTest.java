@@ -1,11 +1,15 @@
 package com.ecoharmony.compraentradas.service;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.ecoharmony.compraentradas.exception.FechaInvalidaException;
 import com.ecoharmony.compraentradas.exception.ParqueCerradoException;
 import com.ecoharmony.compraentradas.service.impl.ValidadorFechaServiceImpl;
-import java.time.*;
+import java.time.Clock;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

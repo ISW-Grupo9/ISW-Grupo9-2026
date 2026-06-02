@@ -1,6 +1,7 @@
 package com.ecoharmony.compraentradas.service;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.ecoharmony.compraentradas.exception.CantidadInvalidaException;
 import com.ecoharmony.compraentradas.service.impl.ValidadorCantidadServiceImpl;

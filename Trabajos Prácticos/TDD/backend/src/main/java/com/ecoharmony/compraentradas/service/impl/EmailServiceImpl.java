@@ -5,7 +5,7 @@ import com.ecoharmony.compraentradas.model.EstadoCompra;
 import com.ecoharmony.compraentradas.model.TipoPase;
 import com.ecoharmony.compraentradas.model.Visitante;
 import com.ecoharmony.compraentradas.repository.UsuarioRepository;
-import com.ecoharmony.compraentradas.service.*;
+import com.ecoharmony.compraentradas.service.EmailService;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
@@ -51,7 +51,9 @@ public class EmailServiceImpl implements EmailService {
     String emailDestino =
         usuarioRepository.findById(compra.getUsuarioId()).map(u -> u.getEmail()).orElse(null);
 
-    if (emailDestino == null) return;
+    if (emailDestino == null) {
+      return;
+    }
 
     try {
       MimeMessage mime = mailSender.createMimeMessage();
@@ -64,14 +66,18 @@ public class EmailServiceImpl implements EmailService {
       log.info("Mail enviado a {}", emailDestino);
     } catch (MailException | jakarta.mail.MessagingException e) {
       log.warn(
-          "No se pudo enviar el mail a {} (sin servidor SMTP): {}", emailDestino, e.getMessage());
+          "No se pudo enviar el mail a {} (sin servidor SMTP): {}",
+          emailDestino,
+          e.getMessage());
     }
   }
 
   private String cargarLogoBase64() {
     try {
       ClassPathResource logoResource = new ClassPathResource("images/logo.jpg");
-      if (!logoResource.exists()) return "";
+      if (!logoResource.exists()) {
+        return "";
+      }
       byte[] bytes = logoResource.getInputStream().readAllBytes();
       return Base64.getEncoder().encodeToString(bytes);
     } catch (Exception e) {
@@ -262,16 +268,25 @@ public class EmailServiceImpl implements EmailService {
 
   private BigDecimal calcularPrecio(Visitante v) {
     BigDecimal base = v.getTipoPase().getPrecio();
-    if (v.getEdad() <= 3) return BigDecimal.ZERO;
-    if (v.getEdad() <= 15 || v.getEdad() >= 60)
+    if (v.getEdad() <= 3) {
+      return BigDecimal.ZERO;
+    }
+    if (v.getEdad() <= 15 || v.getEdad() >= 60) {
       return base.divide(new BigDecimal("2"), 0, RoundingMode.HALF_UP);
+    }
     return base;
   }
 
   private String describir(Visitante v) {
-    if (v.getEdad() <= 3) return "Gratis (≤3 años)";
-    if (v.getEdad() <= 15) return "50% off (≤15 años)";
-    if (v.getEdad() >= 60) return "50% off (≥60 años)";
+    if (v.getEdad() <= 3) {
+      return "Gratis (≤3 años)";
+    }
+    if (v.getEdad() <= 15) {
+      return "50% off (≤15 años)";
+    }
+    if (v.getEdad() >= 60) {
+      return "50% off (≥60 años)";
+    }
     return "–";
   }
 

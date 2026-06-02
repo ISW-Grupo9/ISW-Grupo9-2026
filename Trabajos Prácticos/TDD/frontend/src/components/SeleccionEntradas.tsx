@@ -1,3 +1,4 @@
+import { MAX_EDAD } from '../utils/compraUtils';
 import type { Visitante } from '../types';
 
 interface Props {
@@ -89,7 +90,14 @@ export function SeleccionEntradas({
                       e.target.value === '' ? null : Number(e.target.value),
                     )
                   }
+                  onKeyDown={(e) => {
+                    if ([',', '.', 'e', 'E', '+', '-'].includes(e.key)) {
+                      e.preventDefault();
+                    }
+                  }}
                   min={0}
+                  max={MAX_EDAD}
+                  step={1}
                   className={`w-16 px-3 py-2 bg-white border rounded-lg text-sm text-forest-900 focus:outline-none focus:border-forest-800 transition-colors ${edadesError?.[i] ? 'border-red-400' : 'border-cream-300'}`}
                 />
                 {edadesError?.[i] && (

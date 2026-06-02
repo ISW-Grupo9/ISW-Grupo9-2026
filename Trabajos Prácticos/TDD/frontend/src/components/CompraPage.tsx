@@ -5,7 +5,7 @@ import { SeleccionFecha } from './SeleccionFecha';
 import { SeleccionEntradas } from './SeleccionEntradas';
 import { SeleccionPago } from './SeleccionPago';
 import { ResumenCompra } from './ResumenCompra';
-import { formatearPrecio } from '../utils/compraUtils';
+import { formatearPrecio, esNombreValido } from '../utils/compraUtils';
 import { useParqueReglas } from '../hooks/useParqueReglas';
 import type { Visitante } from '../types';
 
@@ -40,7 +40,10 @@ export function CompraPage({ usuarioId, usuarioEmail, navigate = () => {}, redir
     submit({
       usuarioId,
       fechaVisita: form.fechaVisita,
-      visitantes: form.visitantes,
+      visitantes: form.visitantes.map((v) => ({
+        ...v,
+        nombre: esNombreValido(v.nombre) ? v.nombre : '',
+      })),
       formaPago: form.formaPago,
     });
   };

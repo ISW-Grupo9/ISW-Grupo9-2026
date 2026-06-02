@@ -1,6 +1,7 @@
 package com.ecoharmony.compraentradas.service;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.ecoharmony.compraentradas.exception.UsuarioNoRegistradoException;
 import com.ecoharmony.compraentradas.model.Usuario;

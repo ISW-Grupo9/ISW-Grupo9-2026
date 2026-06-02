@@ -2,14 +2,19 @@ package com.ecoharmony.compraentradas.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ecoharmony.compraentradas.dto.CompraRequest;
 import com.ecoharmony.compraentradas.dto.CompraResponse;
 import com.ecoharmony.compraentradas.dto.VisitanteDto;
-import com.ecoharmony.compraentradas.exception.*;
-import com.ecoharmony.compraentradas.model.*;
+import com.ecoharmony.compraentradas.exception.FechaInvalidaException;
+import com.ecoharmony.compraentradas.exception.GlobalExceptionHandler;
+import com.ecoharmony.compraentradas.model.EstadoCompra;
+import com.ecoharmony.compraentradas.model.FormaPago;
+import com.ecoharmony.compraentradas.model.TipoPase;
 import com.ecoharmony.compraentradas.service.CompraService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

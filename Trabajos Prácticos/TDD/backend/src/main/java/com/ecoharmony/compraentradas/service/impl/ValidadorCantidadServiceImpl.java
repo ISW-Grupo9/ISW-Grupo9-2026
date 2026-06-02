@@ -1,7 +1,7 @@
 package com.ecoharmony.compraentradas.service.impl;
 
 import com.ecoharmony.compraentradas.exception.CantidadInvalidaException;
-import com.ecoharmony.compraentradas.service.*;
+import com.ecoharmony.compraentradas.service.ValidadorCantidadService;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -2,7 +2,8 @@ package com.ecoharmony.compraentradas.controller;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ecoharmony.compraentradas.exception.GlobalExceptionHandler;
 import org.junit.jupiter.api.DisplayName;
