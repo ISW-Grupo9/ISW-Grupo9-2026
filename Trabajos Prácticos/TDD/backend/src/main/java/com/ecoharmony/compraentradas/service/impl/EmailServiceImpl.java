@@ -56,21 +56,28 @@ public class EmailServiceImpl implements EmailService {
 
     try {
       MimeMessage mime = mailSender.createMimeMessage();
-      MimeMessageHelper helper = new MimeMessageHelper(mime, true, “UTF-8”);
+      MimeMessageHelper helper = new MimeMessageHelper(mime, true, "UTF-8");
       helper.setTo(emailDestino);
-      helper.setSubject(“Confirmación de compra #” + compra.getId() + “ – EcoHarmony Park”);
+      helper.setSubject("Confirmación de compra #" + compra.getId() + " – EcoHarmony Park");
       helper.setText(construirHtml(compra), true);
 
-      ClassPathResource logoResource = new ClassPathResource(“images/logo.jpg”);
-      if (logoResource.exists()) {
-        helper.addInline(“logo-ecoharmony”, logoResource);
-      }
-
       mailSender.send(mime);
-      log.info(“Mail enviado a {}”, emailDestino);
+      log.info("Mail enviado a {}", emailDestino);
     } catch (MailException | jakarta.mail.MessagingException e) {
       log.warn(
-          “No se pudo enviar el mail a {} (sin servidor SMTP): {}”, emailDestino, e.getMessage());
+          "No se pudo enviar el mail a {} (sin servidor SMTP): {}", emailDestino, e.getMessage());
+    }
+  }
+
+  private String cargarLogoBase64() {
+    try {
+      ClassPathResource logoResource = new ClassPathResource("images/logo.jpg");
+      if (!logoResource.exists()) return "";
+      byte[] bytes = logoResource.getInputStream().readAllBytes();
+      return Base64.getEncoder().encodeToString(bytes);
+    } catch (Exception e) {
+      log.warn("No se pudo cargar el logo: {}", e.getMessage());
+      return "";
     }
   }
 
@@ -81,6 +88,8 @@ public class EmailServiceImpl implements EmailService {
             ? "Efectivo en boletería"
             : "Tarjeta (Mercado Pago)";
     String qrBase64 = generarQrBase64(compra);
+    String logoBase64 = cargarLogoBase64();
+    String logoSrc = logoBase64.isEmpty() ? "" : "data:image/jpeg;base64," + logoBase64;
 
     StringBuilder filas = new StringBuilder();
     BigDecimal total = BigDecimal.ZERO;
@@ -90,7 +99,7 @@ public class EmailServiceImpl implements EmailService {
       BigDecimal subtotal = calcularPrecio(v);
       total = total.add(subtotal);
 
-      String nombreCelda = (v.getNombre() != null) ? v.getNombre() : “–“;
+      String nombreCelda = (v.getNombre() != null) ? v.getNombre() : "–";
       String descuento = describir(v);
 
       filas.append(
@@ -137,7 +146,7 @@ public class EmailServiceImpl implements EmailService {
                     <!-- Header -->
                     <tr>
                       <td style="background:#1B4332;padding:32px 40px;text-align:center">
-                        <img src="cid:logo-ecoharmony" width="72" height="72"
+                        <img src="%s" width="72" height="72"
                              alt="EcoHarmony Park"
                              style="border-radius:50%%;object-fit:cover;border:2px solid #6A994E;margin-bottom:12px;display:block;margin-left:auto;margin-right:auto"/>
                         <p style="margin:0 0 4px;color:#52B788;font-size:11px;letter-spacing:3px;text-transform:uppercase">Reserva confirmada</p>
@@ -211,8 +220,8 @@ public class EmailServiceImpl implements EmailService {
                     <!-- Footer -->
                     <tr>
                       <td style="background:#1B4332;padding:24px 40px;text-align:center">
-                        <p style=”margin:0;color:#52B788;font-size:12px”>EcoHarmony Park – Sistema de reservas</p>
-                        <p style=”margin:4px 0 0;color:#D8F3DC;font-size:11px”>Este es un correo automático, no respondas este mensaje.</p>
+                        <p style="margin:0;color:#52B788;font-size:12px">EcoHarmony Park – Sistema de reservas</p>
+                        <p style="margin:4px 0 0;color:#D8F3DC;font-size:11px">Este es un correo automático, no respondas este mensaje.</p>
                       </td>
                     </tr>
 
@@ -223,7 +232,7 @@ public class EmailServiceImpl implements EmailService {
             </html>
             """
         .formatted(
-            compra.getId(), fecha, formaPago, filas.toString(), formatearPrecio(total), imgQr);
+            logoSrc, compra.getId(), fecha, formaPago, filas.toString(), formatearPrecio(total), imgQr);
   }
 
   private String generarQrBase64(Compra compra) {
@@ -255,10 +264,10 @@ public class EmailServiceImpl implements EmailService {
   }
 
   private String describir(Visitante v) {
-    if (v.getEdad() <= 3) return “Gratis (≤3 años)”;
-    if (v.getEdad() <= 15) return “50% off (≤15 años)”;
-    if (v.getEdad() >= 60) return “50% off (≥60 años)”;
-    return “–“;
+    if (v.getEdad() <= 3) return "Gratis (≤3 años)";
+    if (v.getEdad() <= 15) return "50% off (≤15 años)";
+    if (v.getEdad() >= 60) return "50% off (≥60 años)";
+    return "–";
   }
 
   private String formatearPrecio(BigDecimal valor) {
