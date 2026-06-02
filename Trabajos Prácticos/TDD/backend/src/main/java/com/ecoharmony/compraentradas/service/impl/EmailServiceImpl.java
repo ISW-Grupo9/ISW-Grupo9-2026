@@ -16,9 +16,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.Base64;
 import java.util.Locale;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -35,10 +36,15 @@ public class EmailServiceImpl implements EmailService {
 
   private final JavaMailSender mailSender;
   private final UsuarioRepository usuarioRepository;
+  private final String mailFrom;
 
-  public EmailServiceImpl(JavaMailSender mailSender, UsuarioRepository usuarioRepository) {
+  public EmailServiceImpl(
+      JavaMailSender mailSender,
+      UsuarioRepository usuarioRepository,
+      @Value("${ecoharmony.mail.from}") String mailFrom) {
     this.mailSender = mailSender;
     this.usuarioRepository = usuarioRepository;
+    this.mailFrom = mailFrom;
   }
 
   @Override
@@ -57,10 +63,24 @@ public class EmailServiceImpl implements EmailService {
 
     try {
       MimeMessage mime = mailSender.createMimeMessage();
-      MimeMessageHelper helper = new MimeMessageHelper(mime, true, "UTF-8");
+      MimeMessageHelper helper =
+          new MimeMessageHelper(mime, MimeMessageHelper.MULTIPART_MODE_RELATED, "UTF-8");
+      helper.setFrom(mailFrom);
       helper.setTo(emailDestino);
       helper.setSubject("Confirmación de compra #" + compra.getId() + " – EcoHarmony Park");
-      helper.setText(construirHtml(compra), true);
+
+      byte[] logoBytes = cargarLogoBytes();
+      byte[] qrBytes = generarQrBytes(compra);
+      boolean tieneQr = qrBytes != null;
+
+      helper.setText(construirHtml(compra, logoBytes != null, tieneQr), true);
+
+      if (logoBytes != null) {
+        helper.addInline("logo", new ByteArrayResource(logoBytes), "image/jpeg");
+      }
+      if (tieneQr) {
+        helper.addInline("qr", new ByteArrayResource(qrBytes), "image/png");
+      }
 
       mailSender.send(mime);
       log.info("Mail enviado a {}", emailDestino);
@@ -72,29 +92,26 @@ public class EmailServiceImpl implements EmailService {
     }
   }
 
-  private String cargarLogoBase64() {
+  private byte[] cargarLogoBytes() {
     try {
       ClassPathResource logoResource = new ClassPathResource("images/logo.jpg");
       if (!logoResource.exists()) {
-        return "";
+        return null;
       }
-      byte[] bytes = logoResource.getInputStream().readAllBytes();
-      return Base64.getEncoder().encodeToString(bytes);
+      return logoResource.getInputStream().readAllBytes();
     } catch (Exception e) {
       log.warn("No se pudo cargar el logo: {}", e.getMessage());
-      return "";
+      return null;
     }
   }
 
-  private String construirHtml(Compra compra) {
+  private String construirHtml(Compra compra, boolean tienelogo, boolean tieneQr) {
     String fecha = compra.getFechaVisita().format(FORMATO_FECHA);
     String formaPago =
         compra.getFormaPago().name().equals("EFECTIVO")
             ? "Efectivo en boletería"
             : "Tarjeta (Mercado Pago)";
-    String qrBase64 = generarQrBase64(compra);
-    String logoBase64 = cargarLogoBase64();
-    String logoSrc = logoBase64.isEmpty() ? "" : "data:image/jpeg;base64," + logoBase64;
+    String logoSrc = tienelogo ? "cid:logo" : "";
 
     StringBuilder filas = new StringBuilder();
     BigDecimal total = BigDecimal.ZERO;
@@ -128,59 +145,68 @@ public class EmailServiceImpl implements EmailService {
     }
 
     String imgQr =
-        qrBase64.isEmpty()
+        !tieneQr
             ? ""
             : """
             <div style="text-align:center;margin:28px 0 8px">
-              <img src="data:image/png;base64,%s" width="160" height="160"
+              <img src="cid:qr" width="160" height="160"
                    alt="QR de acceso" style="border:4px solid #D8F3DC;border-radius:8px;padding:4px"/>
-              <p style="color:#888;font-size:11px;margin-top:6px">Presentá este código al ingresar al parque</p>
+              <p style="color:#555555;font-size:11px;margin-top:6px">Presentá este código al ingresar al parque</p>
             </div>
-            """
-                .formatted(qrBase64);
+            """;
 
     return """
             <!DOCTYPE html>
-            <html lang="es">
-            <head><meta charset="UTF-8"></head>
-            <body style="margin:0;padding:0;background:#F8F3E8;font-family:'DM Sans',Arial,sans-serif">
-              <table width="100%%" cellpadding="0" cellspacing="0" style="background:#F8F3E8;padding:32px 0">
-                <tr><td align="center">
-                  <table width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08)">
+            <html lang="es" style="color-scheme:light only">
+            <head>
+              <meta charset="UTF-8">
+              <meta name="color-scheme" content="light only">
+              <meta name="supported-color-schemes" content="light">
+              <style>
+                :root { color-scheme: light only; }
+                @media (prefers-color-scheme: dark) {
+                  body, table, td, div, p, h1, h2 { background-color: inherit !important; color: inherit !important; }
+                }
+              </style>
+            </head>
+            <body style="margin:0;padding:0;background-color:#F8F3E8 !important;font-family:Arial,sans-serif;color:#333333">
+              <table width="100%%" cellpadding="0" cellspacing="0" bgcolor="#F8F3E8" style="background-color:#F8F3E8;padding:32px 0">
+                <tr><td align="center" valign="top">
+                  <table width="600" cellpadding="0" cellspacing="0" bgcolor="#ffffff" style="background-color:#ffffff;border-radius:16px;overflow:hidden;max-width:600px;margin:0 auto">
 
                     <!-- Header -->
                     <tr>
-                      <td style="background:#1B4332;padding:32px 40px;text-align:center">
+                      <td bgcolor="#1B4332" style="background-color:#1B4332;padding:32px 40px;text-align:center">
                         <img src="%s" width="72" height="72"
                              alt="EcoHarmony Park"
                              style="border-radius:50%%;object-fit:cover;border:2px solid #6A994E;margin-bottom:12px;display:block;margin-left:auto;margin-right:auto"/>
                         <p style="margin:0 0 4px;color:#52B788;font-size:11px;letter-spacing:3px;text-transform:uppercase">Reserva confirmada</p>
-                        <h1 style="margin:0;color:#fff;font-size:32px;font-weight:300;letter-spacing:1px">EcoHarmony Park</h1>
+                        <h1 style="margin:0;color:#ffffff;font-size:32px;font-weight:300;letter-spacing:1px">EcoHarmony Park</h1>
                       </td>
                     </tr>
 
                     <!-- Intro -->
                     <tr>
-                      <td style="padding:32px 40px 16px;text-align:center">
+                      <td bgcolor="#ffffff" style="background-color:#ffffff;padding:32px 40px 16px;text-align:center">
                         <h2 style="margin:0 0 8px;color:#1B4332;font-size:22px">¡Tu compra fue confirmada!</h2>
-                        <p style="margin:0;color:#666;font-size:14px">A continuación encontrás el detalle de tu reserva.</p>
+                        <p style="margin:0;color:#666666;font-size:14px">A continuación encontrás el detalle de tu reserva.</p>
                       </td>
                     </tr>
 
                     <!-- Datos generales -->
                     <tr>
-                      <td style="padding:8px 40px 24px">
-                        <table width="100%%" cellpadding="0" cellspacing="0" style="background:#F8F3E8;border-radius:10px;padding:20px 24px">
+                      <td bgcolor="#ffffff" style="background-color:#ffffff;padding:8px 40px 24px">
+                        <table width="100%%" cellpadding="0" cellspacing="0" bgcolor="#F8F3E8" style="background-color:#F8F3E8;border-radius:10px;padding:20px 24px">
                           <tr>
-                            <td style="padding:6px 0;font-size:13px;color:#888;width:40%%">Número de orden</td>
+                            <td style="padding:6px 0;font-size:13px;color:#888888;width:40%%">Número de orden</td>
                             <td style="padding:6px 0;font-size:13px;font-weight:700;color:#1B4332">#%s</td>
                           </tr>
                           <tr>
-                            <td style="padding:6px 0;font-size:13px;color:#888">Fecha de visita</td>
+                            <td style="padding:6px 0;font-size:13px;color:#888888">Fecha de visita</td>
                             <td style="padding:6px 0;font-size:13px;font-weight:700;color:#1B4332">%s</td>
                           </tr>
                           <tr>
-                            <td style="padding:6px 0;font-size:13px;color:#888">Forma de pago</td>
+                            <td style="padding:6px 0;font-size:13px;color:#888888">Forma de pago</td>
                             <td style="padding:6px 0;font-size:13px;font-weight:700;color:#1B4332">%s</td>
                           </tr>
                         </table>
@@ -189,17 +215,17 @@ public class EmailServiceImpl implements EmailService {
 
                     <!-- Visitantes -->
                     <tr>
-                      <td style="padding:0 40px 24px">
+                      <td bgcolor="#ffffff" style="background-color:#ffffff;padding:0 40px 24px">
                         <p style="margin:0 0 10px;font-size:12px;font-weight:600;color:#1B4332;text-transform:uppercase;letter-spacing:2px">Visitantes</p>
-                        <table width="100%%" cellpadding="0" cellspacing="0" style="font-size:13px;color:#333">
+                        <table width="100%%" cellpadding="0" cellspacing="0" style="font-size:13px;color:#333333">
                           <thead>
-                            <tr style="background:#F8F3E8">
-                              <th style="padding:8px;text-align:left;color:#888;font-weight:500">#</th>
-                              <th style="padding:8px;text-align:left;color:#888;font-weight:500">Nombre</th>
-                              <th style="padding:8px;text-align:left;color:#888;font-weight:500">Edad</th>
-                              <th style="padding:8px;text-align:left;color:#888;font-weight:500">Pase</th>
-                              <th style="padding:8px;text-align:left;color:#888;font-weight:500">Descuento</th>
-                              <th style="padding:8px;text-align:right;color:#888;font-weight:500">Subtotal</th>
+                            <tr bgcolor="#F8F3E8" style="background-color:#F8F3E8">
+                              <th style="padding:8px;text-align:left;color:#888888;font-weight:500">#</th>
+                              <th style="padding:8px;text-align:left;color:#888888;font-weight:500">Nombre</th>
+                              <th style="padding:8px;text-align:left;color:#888888;font-weight:500">Edad</th>
+                              <th style="padding:8px;text-align:left;color:#888888;font-weight:500">Pase</th>
+                              <th style="padding:8px;text-align:left;color:#888888;font-weight:500">Descuento</th>
+                              <th style="padding:8px;text-align:right;color:#888888;font-weight:500">Subtotal</th>
                             </tr>
                           </thead>
                           <tbody>%s</tbody>
@@ -209,7 +235,7 @@ public class EmailServiceImpl implements EmailService {
 
                     <!-- Total -->
                     <tr>
-                      <td style="padding:0 40px 8px">
+                      <td bgcolor="#ffffff" style="background-color:#ffffff;padding:0 40px 8px">
                         <table width="100%%" cellpadding="0" cellspacing="0">
                           <tr>
                             <td style="padding:16px 0;border-top:2px solid #1B4332;font-size:18px;font-weight:700;color:#1B4332">Total</td>
@@ -220,11 +246,11 @@ public class EmailServiceImpl implements EmailService {
                     </tr>
 
                     <!-- QR -->
-                    <tr><td>%s</td></tr>
+                    <tr><td bgcolor="#ffffff" style="background-color:#ffffff">%s</td></tr>
 
                     <!-- Footer -->
                     <tr>
-                      <td style="background:#1B4332;padding:24px 40px;text-align:center">
+                      <td bgcolor="#1B4332" style="background-color:#1B4332;padding:24px 40px;text-align:center">
                         <p style="margin:0;color:#52B788;font-size:12px">EcoHarmony Park – Sistema de reservas</p>
                         <p style="margin:4px 0 0;color:#D8F3DC;font-size:11px">Este es un correo automático, no respondas este mensaje.</p>
                       </td>
@@ -246,7 +272,7 @@ public class EmailServiceImpl implements EmailService {
             imgQr);
   }
 
-  private String generarQrBase64(Compra compra) {
+  private byte[] generarQrBytes(Compra compra) {
     try {
       String contenido =
           String.join(
@@ -259,10 +285,10 @@ public class EmailServiceImpl implements EmailService {
       BitMatrix matrix = writer.encode(contenido, BarcodeFormat.QR_CODE, 300, 300);
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       MatrixToImageWriter.writeToStream(matrix, "PNG", out);
-      return Base64.getEncoder().encodeToString(out.toByteArray());
+      return out.toByteArray();
     } catch (Exception e) {
       log.warn("No se pudo generar el QR: {}", e.getMessage());
-      return "";
+      return null;
     }
   }
 

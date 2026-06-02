@@ -45,7 +45,7 @@ class EmailServiceImplTest {
 
   @BeforeEach
   void setUp() {
-    emailService = new EmailServiceImpl(mailSender, usuarioRepository);
+    emailService = new EmailServiceImpl(mailSender, usuarioRepository, "test@ecoharmony.com");
   }
 
   private void stubMimeMessage() {
