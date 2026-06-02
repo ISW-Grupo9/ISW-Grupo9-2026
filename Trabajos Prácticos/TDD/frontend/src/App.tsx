@@ -10,7 +10,7 @@ function App() {
       <Route
         path="/"
         element={
-          <CompraPage usuarioId="1" usuarioEmail="demo@ecoharmony.com" navigate={navigate} />
+          <CompraPage usuarioId="1" usuarioEmail="mateob.facultad@gmail.com" navigate={navigate} />
         }
       />
       <Route path="/pago/simulado" element={<MercadoPagoPage />} />

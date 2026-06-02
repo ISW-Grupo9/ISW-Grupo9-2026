@@ -86,9 +86,7 @@ public class EmailServiceImpl implements EmailService {
       log.info("Mail enviado a {}", emailDestino);
     } catch (MailException | jakarta.mail.MessagingException e) {
       log.warn(
-          "No se pudo enviar el mail a {} (sin servidor SMTP): {}",
-          emailDestino,
-          e.getMessage());
+          "No se pudo enviar el mail a {} (sin servidor SMTP): {}", emailDestino, e.getMessage());
     }
   }
 
