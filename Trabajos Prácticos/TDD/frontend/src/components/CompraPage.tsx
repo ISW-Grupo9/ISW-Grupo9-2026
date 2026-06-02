@@ -102,11 +102,18 @@ export function CompraPage({ usuarioId, usuarioEmail, navigate = () => {}, redir
       {/* Header */}
       <header className="bg-forest-900 py-10 px-4">
         <div className="max-w-2xl mx-auto flex justify-between items-start">
-          <div>
-            <p className="text-forest-600 text-xs font-medium tracking-[0.2em] uppercase mb-1">
-              Reserva tu visita
-            </p>
-            <h1 className="font-display text-5xl text-white leading-tight">EcoHarmony Park</h1>
+          <div className="flex items-center gap-4">
+            <img
+              src="/logo.jpg"
+              alt="EcoHarmony Park"
+              className="w-16 h-16 rounded-full object-cover border-2 border-forest-600 shadow-md"
+            />
+            <div>
+              <p className="text-forest-600 text-xs font-medium tracking-[0.2em] uppercase mb-1">
+                Reserva tu visita
+              </p>
+              <h1 className="font-display text-5xl text-white leading-tight">EcoHarmony Park</h1>
+            </div>
           </div>
           {usuarioEmail && (
             <div
