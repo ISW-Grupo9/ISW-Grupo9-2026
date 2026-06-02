@@ -30,11 +30,12 @@ export function CompraPage({ usuarioId, usuarioEmail, navigate = () => {}, redir
       : form.errors.fechaVisita;
     const nextCantidadError = form.visitantes.length === 0 ? 'Seleccioná visitantes' : undefined;
     const nextFormaPagoError = !form.formaPago ? 'Seleccioná una forma de pago' : undefined;
+    const edadesValidas = form.validateEdades();
     setFechaError(nextFechaError);
     setCantidadError(nextCantidadError);
     setFormaPagoError(nextFormaPagoError);
 
-    if (nextFechaError || nextCantidadError || nextFormaPagoError) return;
+    if (nextFechaError || nextCantidadError || nextFormaPagoError || !edadesValidas) return;
 
     submit({
       usuarioId,
@@ -101,61 +102,28 @@ export function CompraPage({ usuarioId, usuarioEmail, navigate = () => {}, redir
     <div className="min-h-screen bg-cream-100">
       {/* Header */}
       <header className="bg-forest-900 py-10 px-4">
-        <div className="max-w-2xl mx-auto flex justify-between items-start">
-          <div className="flex items-center gap-4">
-            <img
-              src="/logo.jpg"
-              alt="EcoHarmony Park"
-              className="w-16 h-16 rounded-full object-cover border-2 border-forest-600 shadow-md"
-            />
-            <div>
-              <p className="text-forest-600 text-xs font-medium tracking-[0.2em] uppercase mb-1">
+        <div className="max-w-2xl mx-auto flex items-center gap-4">
+          <img
+            src="/logo.jpg"
+            alt="EcoHarmony Park"
+            className="w-16 h-16 rounded-full object-cover border-2 border-forest-600 shadow-md flex-shrink-0"
+          />
+          <div className="flex-1">
+            <div className="flex justify-between items-baseline mb-1">
+              <p className="text-forest-600 text-xs font-medium tracking-[0.2em] uppercase">
                 Reserva tu visita
               </p>
-              <h1 className="font-display text-5xl text-white leading-tight">EcoHarmony Park</h1>
+              {usuarioEmail && (
+                <span
+                  className="text-white/40 text-xs tracking-wide"
+                  data-testid="usuario-logueado"
+                >
+                  {usuarioEmail}
+                </span>
+              )}
             </div>
+            <h1 className="font-display text-5xl text-white leading-tight">EcoHarmony Park</h1>
           </div>
-          {usuarioEmail && (
-            <div
-              className="bg-forest-800/50 border border-forest-700/50 rounded-xl p-3 flex items-center gap-4 shadow-sm"
-              data-testid="usuario-logueado"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-forest-700 rounded-full flex items-center justify-center text-white">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    />
-                  </svg>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-white text-sm font-semibold">
-                    {usuarioEmail.split('@')[0]}
-                  </span>
-                  <span className="text-forest-300 text-xs">{usuarioEmail}</span>
-                </div>
-              </div>
-              <div className="w-px h-8 bg-forest-700/50 mx-1"></div>
-              <button
-                type="button"
-                title="Cerrar sesión"
-                className="p-2 text-forest-300 hover:text-white hover:bg-forest-700 rounded-lg transition-colors cursor-pointer"
-                onClick={(e) => e.preventDefault()}
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                  />
-                </svg>
-              </button>
-            </div>
-          )}
         </div>
       </header>
 
@@ -188,7 +156,7 @@ export function CompraPage({ usuarioId, usuarioEmail, navigate = () => {}, redir
             onCantidadChange={form.setCantidad}
             onVisitanteChange={(i, campo, valor) => {
               if (campo === 'nombre') form.setNombreVisitante(i, valor as string);
-              if (campo === 'edad') form.setEdadVisitante(i, valor as number);
+              if (campo === 'edad') form.setEdadVisitante(i, valor as number | null);
               if (campo === 'tipoPase')
                 form.setTipoPaseVisitante(i, valor as Visitante['tipoPase']);
             }}
@@ -196,6 +164,7 @@ export function CompraPage({ usuarioId, usuarioEmail, navigate = () => {}, redir
               form.errors.cantidad ?? (form.visitantes.length === 0 ? cantidadError : undefined)
             }
             nombresError={form.errors.nombresError}
+            edadesError={form.errors.edadesError}
           />
         </section>
 

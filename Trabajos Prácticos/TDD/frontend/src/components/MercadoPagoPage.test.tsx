@@ -38,7 +38,7 @@ describe('MercadoPagoPage', () => {
       }),
     );
     renderConRuta();
-    userEvent.click(screen.getByRole('button', { name: /pagar/i }));
+    await userEvent.click(screen.getByRole('button', { name: /pagar/i }));
     await waitFor(() => expect(screen.getByRole('button', { name: /procesando/i })).toBeTruthy());
   });
 

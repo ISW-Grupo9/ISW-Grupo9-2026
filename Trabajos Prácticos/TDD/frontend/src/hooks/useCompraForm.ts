@@ -8,7 +8,7 @@ import {
   esNombreValido,
 } from '../utils/compraUtils';
 
-const visitanteVacio = (): Visitante => ({ nombre: '', edad: 0, tipoPase: 'REGULAR' });
+const visitanteVacio = (): Visitante => ({ nombre: '', edad: null, tipoPase: 'REGULAR' });
 
 export function useCompraForm() {
   const [fechaVisita, setFechaVisitaState] = useState(() => new Date().toISOString().split('T')[0]);
@@ -43,9 +43,23 @@ export function useCompraForm() {
     }));
   }, []);
 
-  const setEdadVisitante = useCallback((index: number, edad: number) => {
+  const setEdadVisitante = useCallback((index: number, edad: number | null) => {
     setVisitantes((prev) => prev.map((v, i) => (i === index ? { ...v, edad } : v)));
+    setErrors((prev) => {
+      const edadesError = [...(prev.edadesError ?? [])];
+      edadesError[index] = edad === null ? 'Ingrese una edad válida (0-100)' : undefined;
+      return { ...prev, edadesError };
+    });
   }, []);
+
+  const validateEdades = useCallback((): boolean => {
+    const edadesError = visitantes.map((v) =>
+      v.edad === null ? 'Ingrese una edad válida (0-100)' : undefined,
+    );
+    const hasError = edadesError.some(Boolean);
+    if (hasError) setErrors((prev) => ({ ...prev, edadesError }));
+    return !hasError;
+  }, [visitantes]);
 
   const setNombreVisitante = useCallback((index: number, nombre: string) => {
     setVisitantes((prev) => prev.map((v, i) => (i === index ? { ...v, nombre } : v)));
@@ -89,5 +103,6 @@ export function useCompraForm() {
     setNombreVisitante,
     setEdadVisitante,
     setTipoPaseVisitante,
+    validateEdades,
   };
 }

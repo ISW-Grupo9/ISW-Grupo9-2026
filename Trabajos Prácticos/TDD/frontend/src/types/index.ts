@@ -4,7 +4,7 @@ export type EstadoCompra = 'PENDIENTE' | 'PENDIENTE_BOLETERIA' | 'CONFIRMADA';
 
 export interface Visitante {
   nombre: string;
-  edad: number;
+  edad: number | null;
   tipoPase: TipoPase;
 }
 
@@ -36,5 +36,6 @@ export interface CompraFormErrors {
   cantidad?: string;
   visitantes?: string[];
   nombresError?: (string | undefined)[];
+  edadesError?: (string | undefined)[];
   formaPago?: string;
 }

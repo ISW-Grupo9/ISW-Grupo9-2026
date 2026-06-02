@@ -84,6 +84,7 @@ describe('useCompraForm', () => {
     const { result } = renderHook(() => useCompraForm());
     act(() => result.current.setFechaVisita(HOY_ISO));
     act(() => result.current.setCantidad(1));
+    act(() => result.current.setEdadVisitante(0, 25));
     // nombre queda vacío — no debe bloquear
     act(() => result.current.setFormaPago('EFECTIVO'));
     expect(result.current.isValid).toBe(true);
@@ -94,6 +95,7 @@ describe('useCompraForm', () => {
     const { result } = renderHook(() => useCompraForm());
     act(() => result.current.setFechaVisita(HOY_ISO));
     act(() => result.current.setCantidad(1));
+    act(() => result.current.setEdadVisitante(0, 0));
     // edad 0, nombre vacío → ambos válidos
     act(() => result.current.setFormaPago('EFECTIVO'));
     expect(result.current.isValid).toBe(true);
@@ -113,6 +115,7 @@ describe('useCompraForm', () => {
     act(() => result.current.setFechaVisita(HOY_ISO));
     act(() => result.current.setCantidad(1));
     act(() => result.current.setNombreVisitante(0, 'Ana'));
+    act(() => result.current.setEdadVisitante(0, 25));
     act(() => result.current.setFormaPago('EFECTIVO'));
     expect(result.current.isValid).toBe(true);
   });

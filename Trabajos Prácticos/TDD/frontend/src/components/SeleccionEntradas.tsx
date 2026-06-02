@@ -4,9 +4,10 @@ interface Props {
   cantidad: number;
   visitantes: Visitante[];
   onCantidadChange: (n: number) => void;
-  onVisitanteChange: (index: number, campo: keyof Visitante, valor: string | number) => void;
+  onVisitanteChange: (index: number, campo: keyof Visitante, valor: string | number | null) => void;
   error?: string;
   nombresError?: (string | undefined)[];
+  edadesError?: (string | undefined)[];
 }
 
 export function SeleccionEntradas({
@@ -16,6 +17,7 @@ export function SeleccionEntradas({
   onVisitanteChange,
   error,
   nombresError,
+  edadesError,
 }: Props) {
   return (
     <div className="space-y-5">
@@ -51,9 +53,9 @@ export function SeleccionEntradas({
             <div
               key={i}
               data-testid={`visitante-${i}`}
-              className="flex items-center gap-3 bg-cream-50 border border-cream-200 rounded-xl px-4 py-3"
+              className="flex items-start gap-3 bg-cream-50 border border-cream-200 rounded-xl px-4 py-3"
             >
-              <span className="text-xs text-forest-800/40 w-16 shrink-0">N.° {i + 1}</span>
+              <span className="text-xs text-forest-800/40 w-16 shrink-0 pt-6">N.° {i + 1}</span>
               <div className="flex-1 flex flex-col gap-0.5">
                 <span className="text-[10px] text-forest-800/40 uppercase tracking-wider px-1">
                   Nombre
@@ -78,12 +80,23 @@ export function SeleccionEntradas({
                 </span>
                 <input
                   type="number"
-                  value={v.edad}
+                  value={v.edad ?? ''}
                   aria-label={`Edad visitante ${i + 1}`}
-                  onChange={(e) => onVisitanteChange(i, 'edad', Number(e.target.value))}
+                  onChange={(e) =>
+                    onVisitanteChange(
+                      i,
+                      'edad',
+                      e.target.value === '' ? null : Number(e.target.value),
+                    )
+                  }
                   min={0}
-                  className="w-16 px-3 py-2 bg-white border border-cream-300 rounded-lg text-sm text-forest-900 focus:outline-none focus:border-forest-800 transition-colors"
+                  className={`w-16 px-3 py-2 bg-white border rounded-lg text-sm text-forest-900 focus:outline-none focus:border-forest-800 transition-colors ${edadesError?.[i] ? 'border-red-400' : 'border-cream-300'}`}
                 />
+                {edadesError?.[i] && (
+                  <span role="alert" className="text-[10px] text-red-500 px-1">
+                    {edadesError[i]}
+                  </span>
+                )}
               </div>
               <div className="flex-1 flex flex-col gap-0.5">
                 <span className="text-[10px] text-forest-800/40 uppercase tracking-wider px-1">

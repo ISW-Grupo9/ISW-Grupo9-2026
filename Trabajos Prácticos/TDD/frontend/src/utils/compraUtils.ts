@@ -13,6 +13,7 @@ export function getPrecio(tipoPase: TipoPase): number {
 }
 
 export function precioVisitante(visitante: Visitante): number {
+  if (visitante.edad === null) return 0;
   const base = getPrecio(visitante.tipoPase);
   if (visitante.edad <= 3) return 0;
   if (visitante.edad <= 15 || visitante.edad >= 60) return Math.round(base / 2);
@@ -50,7 +51,7 @@ export function esCantidadValida(cantidad: number): boolean {
 }
 
 export function esVisitanteValido(v: Visitante): boolean {
-  return v.edad >= 0;
+  return v.edad !== null && v.edad >= 0;
 }
 
 export function esNombreValido(nombre: string): boolean {
