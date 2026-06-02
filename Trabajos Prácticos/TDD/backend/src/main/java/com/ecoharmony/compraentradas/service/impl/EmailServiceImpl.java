@@ -1,12 +1,11 @@
 package com.ecoharmony.compraentradas.service.impl;
 
-import com.ecoharmony.compraentradas.service.*;
-
 import com.ecoharmony.compraentradas.model.Compra;
 import com.ecoharmony.compraentradas.model.EstadoCompra;
 import com.ecoharmony.compraentradas.model.TipoPase;
 import com.ecoharmony.compraentradas.model.Visitante;
 import com.ecoharmony.compraentradas.repository.UsuarioRepository;
+import com.ecoharmony.compraentradas.service.*;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
@@ -232,7 +231,13 @@ public class EmailServiceImpl implements EmailService {
             </html>
             """
         .formatted(
-            logoSrc, compra.getId(), fecha, formaPago, filas.toString(), formatearPrecio(total), imgQr);
+            logoSrc,
+            compra.getId(),
+            fecha,
+            formaPago,
+            filas.toString(),
+            formatearPrecio(total),
+            imgQr);
   }
 
   private String generarQrBase64(Compra compra) {
@@ -274,4 +279,3 @@ public class EmailServiceImpl implements EmailService {
     return FORMATO_PRECIO.format(valor);
   }
 }
-
