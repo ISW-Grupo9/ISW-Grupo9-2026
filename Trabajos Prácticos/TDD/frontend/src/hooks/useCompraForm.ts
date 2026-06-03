@@ -12,7 +12,13 @@ import {
 const visitanteVacio = (): Visitante => ({ nombre: '', edad: null, tipoPase: 'REGULAR' });
 
 export function useCompraForm() {
-  const [fechaVisita, setFechaVisitaState] = useState(() => new Date().toISOString().split('T')[0]);
+  const [fechaVisita, setFechaVisitaState] = useState(() => {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  });
   const [visitantes, setVisitantes] = useState<Visitante[]>([]);
   const [formaPago, setFormaPago] = useState<FormaPago | null>(null);
   const [errors, setErrors] = useState<CompraFormErrors>({});
