@@ -36,7 +36,7 @@ git checkout main
 git merge docs/actualizar-version
 ```
 
-(Opcional) Subir los cambios al repositorio remoto:
+Subir los cambios al repositorio remoto:
 ```bash
 git push origin main
 ```
