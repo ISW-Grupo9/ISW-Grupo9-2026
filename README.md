@@ -75,4 +75,4 @@ La estructura del repositorio esta compuesta por
 
 
 ## Linea Base --> La Linea base se define el sabado de cada semana.
-## Version actual --> v1.9-baseline
+## Version actual --> v1.10-baseline
